@@ -1,12 +1,24 @@
-<mapper namespace="User">
+<mapper namespace="com.lagou.dao.UserMapper">
 
     <select id="selectOne" paramterType="com.lagou.pojo.User"
             resultType="com.lagou.pojo.User">
         select * from user where id = #{id} and name =#{name}
     </select>
 
-    <select id="selectList" resultType="com.lagou.pojo.User">
-        select * from user
+    <select id="selectAll" resultType="com.lagou.pojo.User" paramterType="com.lagou.pojo.User">
+        select * from user where 1=1
     </select>
+
+    <delete id="delete" resultType="java.lang.Integer" paramterType="com.lagou.pojo.User">
+        delete from user where id = #{id} and name = #{name}
+    </delete>
+
+    <update id="update" resultType="java.lang.Integer" paramterType="com.lagou.pojo.User">
+        update user set name = #{name} where id = #{id}
+    </update>
+
+    <save id="save" resultType="java.lang.Integer" paramterType="com.lagou.pojo.User">
+        insert into user values(#{id}, #{name})
+    </save>
 
 </mapper>

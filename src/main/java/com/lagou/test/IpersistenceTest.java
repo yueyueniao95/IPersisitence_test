@@ -1,12 +1,15 @@
 package com.lagou.test;
 
 
+import com.lagou.dao.UserMapper;
 import com.lagou.io.Resoures;
 import com.lagou.pojo.User;
 import com.lagou.sqlSession.SqlSession;
 import com.lagou.sqlSession.SqlSessionFactory;
 import com.lagou.sqlSession.SqlSessionFactoryBuilder;
 import org.dom4j.DocumentException;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyVetoException;
@@ -19,38 +22,37 @@ import java.util.List;
 
 public class IpersistenceTest {
 
-    public static void main(String[] args) throws PropertyVetoException, DocumentException, SQLException, ClassNotFoundException, IntrospectionException, InstantiationException, IllegalAccessException, NoSuchFieldException, IOException {
+    private SqlSession sqlSession;
+
+    @Before
+    public void before() throws PropertyVetoException, DocumentException {
         InputStream inputStream = Resoures.getInputStream("sqlMapperConfig.xml");
         SqlSessionFactory sqlSessionFactory = SqlSessionFactoryBuilder.build(inputStream);
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        User user = new User();
-        user.setId(1);
-        user.setName("zhangsan");
-        User user1 = sqlSession.selectOne("User.selectOne", user);
-        System.out.println(user1.toString());
+        sqlSession = sqlSessionFactory.openSession();
+    }
 
+    @Test
+    public void testSaveUser(){
+        User user = new User(5, "wangwu");
+        UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+        Integer count = mapper.save(user);
+        System.out.println("影响行数"+count);
+    }
 
-/*        InputStream resourceAsStream = Resources.getResourceAsStream("mybatis-config.xml");
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(resourceAsStream);
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        StudentMapper mapper = sqlSession.getMapper(StudentMapper.class);
-        User user = new User();
-        user.setName("zhangsan");
-        user.setId(1);
-        User user1 = mapper.selectOne(user);
-        System.out.println(user1.toString());
+    @Test
+    public void testUpdateUser(){
+        User user = new User(5, "liliu");
+        UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+        Integer count = mapper.update(user);
+        System.out.println("影响行数"+count);
+    }
 
-        User user2 = new User();
-        user2.setId(2);
-        user2.setName("lisi");
-        mapper.saveUser(user2);
-
-        sqlSession.commit();*/
-
-
-
-
-
+    @Test
+    public void testDelete(){
+        User user = new User(5, "liliu");
+        UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+        Integer count = mapper.delete(user);
+        System.out.println("影响行数"+count);
     }
 
 }
